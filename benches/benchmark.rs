@@ -1,5 +1,5 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
-use pricer::{call};
+use pricer::{call, call_replicating_portfolio};
 
 fn simple_benchmark(c: &mut Criterion) {
     c.bench_function("american_call_option", |b| {
