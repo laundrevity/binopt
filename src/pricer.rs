@@ -19,7 +19,7 @@ pub fn call(t: f64, s: f64, k: f64, r: f64, sigma: f64, q: f64, n: usize) -> f64
             // so node i of slice j has i downticks, and j - i upticks (total ticks = i + j - i = j)
             // we use i to represent number of DOWNTICKS (so i=0 means top = highest price)
             let binomial_val = (-r * delta_t).exp() * (prob * p[i] + (1.0 - prob) * p[i + 1]);
-            let exercise_val = k - s * up.powf((j - i) as f64) * down.powf(i as f64);
+            let exercise_val = s * up.powf((j - i) as f64) * down.powf(i as f64) - k;
             p[i] = f64::max(binomial_val, exercise_val);
         }
     }
@@ -68,7 +68,7 @@ pub fn binomial_call_price(
             // s_prices_left[k] = f64::exp(-r * dt) * (prob * s_prices_right[k] + (1.0 - prob) * s_prices_right[k + 1]);
             opt_prices_left[k] = f64::exp(-r * dt)
                 * (prob * opt_prices_right[k] + (1.0 - prob) * opt_prices_right[k + 1]);
-            let exercise_val = f64::max(K - s_prices_left[k], 0.0);
+            let exercise_val = f64::max(s_prices_left[k] - K, 0.0);
             let opt_price = f64::max(exercise_val, opt_prices_left[k]); // check exercise
             opt_prices_left[k] = opt_price;
         }

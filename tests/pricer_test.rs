@@ -13,7 +13,7 @@ fn test_call() {
     let n = 100;
 
     let call_price = call(t, s, k, r, sigma, q, n);
-    let expected_call_price = 21.345507456248857;
+    let expected_call_price = 6.67609933288102;
 
     assert!(
         (call_price - expected_call_price).abs() < EPSILON,
@@ -33,7 +33,7 @@ fn test_call_jak() {
     let q = 0.03;
     let n = 100;
 
-    let expected_call_price = 21.345507456248857;
+    let expected_call_price = 6.67609933288102;
 
     let res = binomial_call_price(s, k, t, r, q, sigma, n);
 
