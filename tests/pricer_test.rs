@@ -13,7 +13,7 @@ fn test_call() {
     let n = 100;
 
     let call_price = call(t, s, k, r, sigma, q, n);
-    let expected_call_price = 14.800026925784081;
+    let expected_call_price = 21.345507456248857;
 
     assert!(
         (call_price - expected_call_price).abs() < EPSILON,

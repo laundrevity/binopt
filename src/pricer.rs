@@ -1,19 +1,25 @@
 pub fn call(t: f64, s: f64, k: f64, r: f64, sigma: f64, q: f64, n: usize) -> f64 {
     let delta_t = t / (n as f64);
     let up = (sigma * delta_t.sqrt()).exp();
-    let p0 = (up * (-q * delta_t).exp() - (-r * delta_t).exp()) / (up * up - 1.0);
-    let p1 = (-r * delta_t).exp() - p0;
+    let down = (-sigma * delta_t.sqrt()).exp();
+    let prob = (((r - q) * delta_t).exp() - down) / (up - down);
 
     let mut p: Vec<f64> = vec![0.0; n + 1];
     for i in 0..=n {
-        let val = k - s * up.powf(2.0 * (i as f64) - (n as f64));
+        // we use i to represent number of DOWNTICKS (so i=0 means top = highest price)
+        let val = s * up.powf((n - i) as f64) * down.powf(i as f64) - k;
         p[i] = if val < 0.0 { 0.0 } else { val };
     }
 
     for j in (0..n).rev() {
+        // in slice j
         for i in 0..=j {
-            let binomial_val = p0 * p[i + 1] + p1 * p[i];
-            let exercise_val = k - s * up.powf(2.0 * (i as f64) - (j as f64));
+            // every node in slice j consists of j ticks
+            // top node has i=0 and is purely upticks,
+            // so node i of slice j has i downticks, and j - i upticks (total ticks = i + j - i = j)
+            // we use i to represent number of DOWNTICKS (so i=0 means top = highest price)
+            let binomial_val = (-r * delta_t).exp() * (prob * p[i] + (1.0 - prob) * p[i + 1]);
+            let exercise_val = k - s * up.powf((j - i) as f64) * down.powf(i as f64);
             p[i] = f64::max(binomial_val, exercise_val);
         }
     }
