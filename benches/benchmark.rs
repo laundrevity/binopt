@@ -34,7 +34,7 @@ fn hague_benchmark(c: &mut Criterion) {
             let sigma = 0.25;
             let q = 0.03;
             let n = 100;
-            binomal_call_price(s, k, t, r, q, sigma, n)
+            binomial_call_price(s, k, t, r, q, sigma, n)
         })
     });
 }
