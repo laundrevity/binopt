@@ -39,6 +39,12 @@ jobs:
     needs: build
     steps:
     - uses: actions/checkout@v2
+    - name: Setup Rust
+      uses: actions-rs/toolchain@v1
+      with:
+       profile: minimal
+       toolchain: stable
+       override: true
     - name: Bench
       working-directory: ./benches
       run: cargo bench --verbose
