@@ -42,13 +42,13 @@ jobs:
     - name: Setup Rust
       uses: actions-rs/toolchain@v1
       with:
-       profile: minimal
-       toolchain: stable
-       override: true
+        profile: minimal
+        toolchain: stable
+        override: true
     - name: Setup ssh-agent
       uses: webfactory/ssh-agent@v0.5.3
       with:
-       ssh-private-key: ${{ secrets.ACTION_DEPLOY_KEY }}
+        ssh-private-key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
     - name: Bench
       working-directory: ./benches
       run: cargo bench --verbose
@@ -56,11 +56,14 @@ jobs:
       run: |
         git config --global user.email "actions@github.com"
         git config --global user.name "GitHub Actions"
-    - name: Set repo URL to use SSH
+    - name: Set repository URL to use SSH
       run: |
-       git remote set-url origin git@github.com:${{ github.repository }}.git
-    - name: Deploy to GitHub pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./target/criterion/report
+        git remote set-url origin git@github.com:${{ github.repository }}.git
+    - name: Push benchmark results to gh-pages
+      run: |
+        git checkout --orphan gh-pages
+        git rm -rf .
+        cp -r ./target/criterion/report/* .
+        git add .
+        git commit -m "Update benchmark results"
+        git push -u origin gh-pages --force
