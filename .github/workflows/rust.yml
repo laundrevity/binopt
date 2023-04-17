@@ -45,10 +45,6 @@ jobs:
         profile: minimal
         toolchain: stable
         override: true
-    - name: Setup ssh-agent
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
     - name: Bench
       working-directory: ./benches
       run: cargo bench --verbose
