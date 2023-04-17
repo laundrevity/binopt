@@ -55,11 +55,10 @@ jobs:
     - name: Set repository URL to use SSH
       run: |
         git remote set-url origin git@github.com:${{ github.repository }}.git
-    - name: Push benchmark results to gh-pages
-      run: |
-        git checkout --orphan gh-pages
-        git rm -rf .
-        cp -r ./target/criterion/report/* .
-        git add .
-        git commit -m "Update benchmark results"
-        git push -u origin gh-pages --force
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@4.1.5
+      with:
+        branch: gh-pages
+        folder: ./benches/target/criterion
+        token: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+
